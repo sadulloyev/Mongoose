@@ -34,45 +34,81 @@ async function saveFruit() {
     } else {
         console.log('Fruit already exists in the database.');
     }
-
     const kiwi = new Fruit({
+        name: "Kiwi", // Add the name field for the kiwi fruit
         rating: 7,
         review: "Pretty solid as a fruit."
     });
     await kiwi.save();
 
     const Peach = new Fruit({
-        name: 'Peach',
+        name: 'Peach', // Add the name field for the Peach fruit
         rating: 1,
     });
-    await Peach.save();
-}
+    const Pineapple = new Fruit({
+        name: 'Pineapple',
+        rating: 9,
+        review: 'Great tropical fruit.'
+    });
+    await Pineapple.save();
 
+}
 const personSchema = new mongoose.Schema({
     name: String,
     age: Number,
+    favoriteFruit: fruitSchema,
 });
+
 
 const Person = mongoose.model("Person", personSchema);
 
 async function savePerson() {
-    const existingPerson = await Person.findOne({ name: "John" });
+    const Pineapple = new Fruit({
+        name: 'Pineapple',
+        rating: 9,
+        review: 'Great tropical fruit.'
+    });
+    const existingPerson = await Person.findOne({ name: "Jeff" });
+    const kiwi = new Fruit({
+        name: "Kiwi", // Add the name field for the kiwi fruit
+        rating: 7,
+        review: "Pretty solid as a fruit."
+    });
+    // if (!existingPerson) {
+    const person = new Person({
+        name: "Jeff",
+        age: 34,
+        favoriteFruit: kiwi,
+    });
 
-    if (!existingPerson) {
+    try {
+        await person.save();
+        console.log('Person saved successfully!');
+    } catch (error) {
+        console.error(error);
+    }
+    // } else {
+    // console.log('Person already exists in the database.');
+
+    const AmyPerson = await Person.findOne({ name: "Amy" });
+
+    if (!AmyPerson) {
         const person = new Person({
-            name: "John",
-            age: 34,
+            name: "Amy",
+            age: 24,
+            favoriteFruit: Pineapple,
         });
 
         try {
             await person.save();
-            console.log('Person saved successfully!');
+            console.log('Amy saved successfully!');
         } catch (error) {
             console.error(error);
         }
     } else {
-        console.log('Person already exists in the database.');
+        console.log('Amy already exists in the database.');
     }
+
 }
 
 async function run() {
@@ -81,39 +117,6 @@ async function run() {
 }
 
 run();
-async function deleteManyFruit() {
-    try {
-        // Delete the first fruit with the name 'Peach'
-        const result = await Fruit.deleteMany({ name: 'Peach' });
-        console.log('Deleted count:', result.deletedCount);
-    } catch (error) {
-        console.error('Error deleting fruit:', error);
-    } finally {
-        // mongoose.disconnect();
-    }
-}
-
-deleteManyFruit();
-async function deleteSingleFruit() {
-    try {
-        // Delete the first fruit with the name 'Apple'
-        const result = await Fruit.deleteMany({ name: 'Apple' });
-        console.log('Deleted count:', result.deletedCount);
-    } catch (error) {
-        console.error('Error deleting fruit:', error);
-    } finally {
-        // mongoose.disconnect();
-    }
-}
-deleteSingleFruit();
-
-
-// Assuming you have already connected using mongoose.connect(...)
-deleteManyPerson()
-    .then(() => {
-        mongoose.disconnect();
-    })
-    .catch((error) => console.error('Error:', error));
 
 
 
